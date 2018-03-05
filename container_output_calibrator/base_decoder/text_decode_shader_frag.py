@@ -1,20 +1,21 @@
-uniform int u_num_to_skip;
-uniform vec2 u_bit_resolution;
+uniform vec2 u_total_bits;
+uniform int u_usable_bits;
 uniform vec2 u_projector_res;
 uniform float u_threshold = 0.5;
 out vec4 o_color;
 
 // Reconstructs the gray code for the current pixel (MSB to LSB).
+// Performs thresholding
 //
 // Parameters:
 // `number_of_bits`: the number of bits used along the current axis
 // `offset`: an integer slice offset into the texture 3D containing captures
-
 uint get_gray(int number_of_bits, int offset)
 {
 	uint gray = 0;
-
-	for (int i = 0; i < number_of_bits; i += 2)
+	int valid_patterns = u_usable_bits * 2;
+	
+	for (int i = 0; i < valid_patterns; i += 2)
 	{
 		int array_slice = offset + i;
 		float pixel_org = texture(sTD2DArrayInputs[0], vec3(vUV.st, array_slice)).r;
@@ -27,13 +28,9 @@ uint get_gray(int number_of_bits, int offset)
 			gray ^= 1;
 		}
 		// TODO: Implement inverses
-		// else if (pixel < -threshold) 
+		// else if (pixel > -threshold)
 		// {
-		// 	// pixel is OFF
-		// }
-		// else 
-		// {
-		// 	// pixel is REJECTED: set it to -1.0
+		// 	pixel is REJECTED: set it to -1.0
 		// }
 
 		if (i < number_of_bits - 2) 
@@ -58,8 +55,6 @@ uint gray_to_binary(uint num)
 
 void main()
 {
-	const float off_threshold = 0.1;
-	const float on_threshold = 0.5;
 	vec4 color = vec4(-1.0);
 
 	// The number of patterns per axis, times 2 (for the inverse)
@@ -68,7 +63,7 @@ void main()
 
 	// Get the value as calculated from the patterns and convert to binary
 	uint gray_col = get_gray(col_res, 0);
-	uint gray_row = get_gray(row_res, 20);
+	uint gray_row = get_gray(row_res, col_res);
 	uint val_col = gray_to_binary(gray_col);
 	uint val_row = gray_to_binary(gray_row);
 

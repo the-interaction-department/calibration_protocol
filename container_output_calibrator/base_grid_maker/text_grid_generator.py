@@ -37,7 +37,7 @@ class Grid_generator:
 				# Many camera pixels do not store projector pixels - skip these
 				if not ppx or not ppy:
 					continue
-					
+
 				# Figure out which grid cell this corresponds to
 				cell_x = int(ppx // self.grid_spacing_x)
 				cell_y = int(ppy // self.grid_spacing_y)
