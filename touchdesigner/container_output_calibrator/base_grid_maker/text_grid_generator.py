@@ -1,23 +1,27 @@
 class Grid_generator:
 	def __init__(self):
-		# TODO: Where do these numbers come from?
-		self.num_rows = 24
-		self.num_cols = 32
-		self.image_w = op('select_output_info')['width'].eval()
-		self.image_h = op('select_output_info')['height'].eval()
-		self.grid_spacing_x = math.floor(self.image_w / self.num_cols)
-		self.grid_spacing_y = math.floor(self.image_h / self.num_rows)
-		self.placeholder_points_grid = op('sopto_points_placeholder')
+		self.constants = op('select_output_info')
 		self.grid_data = op('table_grid_data')
 		self.destination_grid = op('table_points')
 		self.c2p = op('null_c2p')
-
+		self.grid_geometry = op('grid1')		
+		self.bits_not_used_x = self.constants['bits_x'].eval() - self.constants['bits_to_use'].eval()
+		self.bits_not_used_y = self.constants['bits_y'].eval() - self.constants['bits_to_use'].eval()
+		self.grid_spacing_x = 2**self.bits_not_used_x
+		self.grid_spacing_y = 2**self.bits_not_used_y
+		self.num_rows = math.floor(self.constants['width'] / self.grid_spacing_x)
+		self.num_cols = math.floor(self.constants['height'] / self.grid_spacing_y)
+		self.placeholder_points_grid = op('sopto_points_placeholder')
 
 	def Init_grid(self):
 		"""Initialize the grid with the correct number of rows and columns"""
 
 		print('Initializing grid with {}x{} pixel blocks'.format(self.grid_spacing_x, self.grid_spacing_y))
 		
+		# Setup the SOP
+		self.grid_geometry.par.rows = self.num_rows
+		self.grid_geometry.par.cols = self.num_cols
+
 		self.grid_data.clear(keepFirstRow=True)
 
 		for y in range(self.num_rows):
