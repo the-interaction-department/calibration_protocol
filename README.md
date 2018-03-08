@@ -1,22 +1,18 @@
 # Output Calibration
 *Developing techniques to map video output*
 
-## Note: Under heavy development
+## Description
+A toolkit to perfect video calibration
 
-## What this repo does:
-This repo contains a tool to map video output.
-Currently it is only works as a TouchDesigner project.
-
-## Tested on:
+## Tested On
 - Windows
 
-## To build and use:
-- Install touchdesigner
-- Open `output_calibration.toe`
-- Press the `run` button
 
-## Things to do
-- Many
+## To Use
+- Open the project in the `touchdesigner` directory
+
+## Extra Notes
+## This project is under heavy development and even the main branch may not work currently
 
 ### License
 
