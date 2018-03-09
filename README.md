@@ -1,5 +1,5 @@
-# Output Calibration
-*Developing techniques to map video output*
+# Calibration Protocol
+*Developing techniques to calibrate video output*
 
 ## Description
 A toolkit to perfect video calibration
