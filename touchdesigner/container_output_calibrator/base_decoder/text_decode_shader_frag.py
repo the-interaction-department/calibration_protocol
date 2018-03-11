@@ -1,11 +1,10 @@
 uniform vec2 u_total_bits;
-uniform int u_usable_bits;
+uniform int u_bits_to_use;
 uniform vec2 u_projector_res;
 uniform float u_threshold = 0.5;
 out vec4 o_color;
 
-// Reconstructs the gray code for the current pixel (MSB to LSB).
-// Performs thresholding
+// Reconstructs the gray code for the current pixel (MSB to LSB)
 //
 // Parameters:
 // `number_of_bits`: the number of bits used along the current axis
@@ -13,9 +12,9 @@ out vec4 o_color;
 uint get_gray(int number_of_bits, int offset)
 {
 	uint gray = 0;
-	int valid_patterns = u_usable_bits * 2;
+	int valid_patterns = u_bits_to_use * 2;
 	
-	for (int i = 0; i < valid_patterns; i += 2)
+	for (int i = 0; i < number_of_bits; i += 2)
 	{
 		int array_slice = offset + i;
 		float pixel_org = texture(sTD2DArrayInputs[0], vec3(vUV.st, array_slice)).r;
@@ -23,10 +22,11 @@ uint get_gray(int number_of_bits, int offset)
 
 		float diff = pixel_org - pixel_inv;
 
-		if (diff > u_threshold) 
+		if (diff > u_threshold && i < valid_patterns) 
 		{
 			gray ^= 1;
 		}
+	
 		// TODO: Implement inverses
 		// else if (pixel > -threshold)
 		// {
@@ -58,18 +58,18 @@ void main()
 	vec4 color = vec4(-1.0);
 
 	// The number of patterns per axis times 2 (for the inverse)
-	// These are the same and would only differ in extreme
-	int col_res = int(u_usable_bits) * 2;
-	int row_res = int(u_usable_bits) * 2; 
+	// TODO: When would the x and y differ? If you have an extremely non-uniform aspect ratio
+	int patterns_x = int(u_total_bits) * 2;
+	int patterns_y = int(u_total_bits) * 2; 
 
 	// Get the value as calculated from the patterns and convert to binary
-	uint gray_col = get_gray(col_res, 0);
-	uint gray_row = get_gray(row_res, col_res);
-	uint val_col = gray_to_binary(gray_col);
-	uint val_row = gray_to_binary(gray_row);
+	uint gray_value_x = get_gray(patterns_x, 0);
+	uint gray_value_y = get_gray(patterns_y, patterns_x);
+	uint val_x = gray_to_binary(gray_value_x);
+	uint val_y = gray_to_binary(gray_value_y);
 
 	// Scale color from 0->1 then scale to native projector resolution
-	color = vec4(val_col, val_row, 0.0, 1.0);
+	color = vec4(val_x, val_y, 0.0, 1.0);
 	color.xy /= max(u_projector_res.x, u_projector_res.y);
 	color.xy *= u_projector_res;
 

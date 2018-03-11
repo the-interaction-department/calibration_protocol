@@ -1,5 +1,5 @@
 def onValueChange(channel, sampleIndex, val, prev):
-	# Make sim show the patterns
+	# Output the patterns and capture the first image with pattern 0
 	op.Projector_outputs.op('switch_projection_map').par.index = 0
 
 	# Capture first image

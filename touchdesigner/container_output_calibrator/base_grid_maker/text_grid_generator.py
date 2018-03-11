@@ -1,5 +1,10 @@
 class Grid_generator:
 	def __init__(self):
+		self.Init_constants()
+
+	def Init_constants(self):
+		"""Set all member variables which may have changes after __init__ is called"""
+
 		self.constants = op('select_output_info')
 		self.grid_data = op('table_grid_data')
 		self.destination_grid = op('table_points')
@@ -9,8 +14,8 @@ class Grid_generator:
 		self.bits_not_used_y = self.constants['bits_y'].eval() - self.constants['bits_to_use'].eval()
 		self.grid_spacing_x = 2**self.bits_not_used_x
 		self.grid_spacing_y = 2**self.bits_not_used_y
-		self.num_rows = math.floor(self.constants['width'] / self.grid_spacing_x)
-		self.num_cols = math.floor(self.constants['height'] / self.grid_spacing_y)
+		self.num_rows = math.floor(self.constants['height'] / self.grid_spacing_y)
+		self.num_cols = math.floor(self.constants['width'] / self.grid_spacing_x)
 		self.placeholder_points_grid = op('sopto_points_placeholder')
 
 	def Init_grid(self):
@@ -24,6 +29,7 @@ class Grid_generator:
 
 		self.grid_data.clear(keepFirstRow=True)
 
+		# Set the center (i.e. the position which will store the UV coordinate)
 		for y in range(self.num_rows):
 			for x in range(self.num_cols):
 				center_x = self.grid_spacing_x * x + self.grid_spacing_x // 2
@@ -93,6 +99,7 @@ class Grid_generator:
 	def Execute_all(self):
 		"""Convenience method that calls all steps"""
 
+		self.Init_constants()
 		self.Init_grid()
 		self.Process_grid()
 		self.Compute_averages()
