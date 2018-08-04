@@ -26,7 +26,6 @@ class Grid_generator:
 		# Setup the SOP
 		self.grid_geometry.par.rows = self.num_rows
 		self.grid_geometry.par.cols = self.num_cols
-
 		self.grid_data.clear(keepFirstRow=True)
 
 		# Set the center (i.e. the position which will store the UV coordinate)
@@ -36,7 +35,7 @@ class Grid_generator:
 				center_y = self.grid_spacing_y * y + self.grid_spacing_y // 2
 				self.grid_data.appendRow([center_x, center_y, 0, 0, 0])
 
-	def Process_grid(self):
+	def Process_grid(self, verbose=False):
 		"""Loop through every pixel in the c2p and build the correspondence between projector and camera pixels"""
 
 		for cpx in range(self.c2p.width):
@@ -51,7 +50,9 @@ class Grid_generator:
 				# Figure out which grid cell this corresponds to
 				cell_x = int(ppx // self.grid_spacing_x)
 				cell_y = int(ppy // self.grid_spacing_y)
-				print('projector pixel ({},{}) corresponds to grid cell ({}, {})'.format(ppx, ppy, cell_x, cell_y))
+				
+				if verbose:
+					print('projector pixel ({},{}) corresponds to grid cell ({}, {})'.format(ppx, ppy, cell_x, cell_y))
 				
 				# Skip the table header
 				table_row = cell_x + cell_y * self.num_cols + 1

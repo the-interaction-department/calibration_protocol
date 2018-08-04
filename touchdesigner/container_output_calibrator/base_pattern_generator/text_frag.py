@@ -1,10 +1,13 @@
-// Example:
-// 4 bits
-// 0 index
-// 8 images per orientation (4 * 2)
+// The bit-depth of the gray code sequence (i.e. 4 bits)
 uniform int u_bits;
+
+// The absolute index of the current pattern, accounting for orientation and inversion
 uniform int u_absolute_index;
+
+// The total number of patterns per orientation (horizontal / vertical)
 uniform int u_images_per_orientation; 
+
+// The current orientation (`true` if horizontal, `false` otherwise)
 uniform bool u_orientation; 
 
 layout(location = 0) out vec4 o_color;
@@ -30,10 +33,10 @@ void main()
     // Divide the space into a number of tiles equal to the
     // total number of patterns that will be used
     float scaled = float(possible_unique) * axis; 
-    float sequence = floor(scaled);
+    float sequence_index = floor(scaled);
 
     // Convert the tile coords to the corresponding grey code 
-    uint num = uint(sequence);
+    uint num = uint(sequence_index);
     uint gray = binary_to_gray(num);
 
     // Is the bit at position `u_absolute_index` on or off for 
