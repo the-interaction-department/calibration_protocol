@@ -36,15 +36,15 @@ uint decode(int number_of_bits, int offset, inout bool valid)
 			{
 				gray ^= 1;
 			}
-			else if (diff < -u_threshold)
-			{
-				// Do nothing...	
-			}
-			else 
-			{
-				valid = false;
-				break;
-			}
+			// else if (diff < -u_threshold)
+			// {
+			// 	// Do nothing...	
+			// }
+			// else 
+			// {
+			// 	valid = false;
+			// 	break;
+			// }
 		}
 
 
@@ -89,8 +89,6 @@ void main()
 
 	// Scale color from [0..1] then scale to native projector resolution
 	color = vec4(val_x, val_y, 0.0, 1.0);
-	color.xy /= max(u_projector_resolution.x, u_projector_resolution.y);
-	color.xy *= u_projector_resolution;
 
 	if (!valid_x || !valid_y)
 	{
