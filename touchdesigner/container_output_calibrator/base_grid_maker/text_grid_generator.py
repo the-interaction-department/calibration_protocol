@@ -44,7 +44,7 @@ class Grid_generator:
 				ppx, ppy, _, _ = self.c2p.sample(x=cpx, y=cpy)
 
 				# Many camera pixels do not store projector pixels - skip these
-				if not ppx or not ppy:
+				if ppx < 0.0 or ppy < 0.0:
 					continue
 
 				# Figure out which grid cell this corresponds to

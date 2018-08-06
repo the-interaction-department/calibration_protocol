@@ -36,15 +36,15 @@ uint decode(int number_of_bits, int offset, inout bool valid)
 			{
 				gray ^= 1;
 			}
-			// else if (diff < -u_threshold)
-			// {
-			// 	// Do nothing...	
-			// }
-			// else 
-			// {
-			// 	valid = false;
-			// 	break;
-			// }
+			else if (diff < -u_threshold)
+			{
+				// Do nothing...	
+			}
+			else 
+			{
+				valid = false;
+				break;
+			}
 		}
 
 
