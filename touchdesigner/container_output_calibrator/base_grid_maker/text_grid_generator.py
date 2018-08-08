@@ -9,7 +9,7 @@ class Grid_generator:
 		self.grid_data = op('table_grid_data')
 		self.destination_grid = op('table_points')
 		self.c2p = op('null_c2p')
-		self.grid_geometry = op('grid1')		
+		self.grid_geometry = op('grid_template')		
 		self.bits_not_used_x = self.constants['bits_x'].eval() - self.constants['bits_to_use'].eval()
 		self.bits_not_used_y = self.constants['bits_y'].eval() - self.constants['bits_to_use'].eval()
 		self.grid_spacing_x = 2**self.bits_not_used_x
