@@ -14,8 +14,8 @@ class Grid_generator:
 		self.bits_not_used_y = self.constants['bits_y'].eval() - self.constants['bits_to_use'].eval()
 		self.grid_spacing_x = 2**self.bits_not_used_x
 		self.grid_spacing_y = 2**self.bits_not_used_y
-		self.num_rows = math.floor(self.constants['height'] / self.grid_spacing_y)
-		self.num_cols = math.floor(self.constants['width'] / self.grid_spacing_x)
+		self.num_rows = math.floor(parent.Calibrator.par.Projectorresolution2 / self.grid_spacing_y)
+		self.num_cols = math.floor(parent.Calibrator.par.Projectorresolution1 / self.grid_spacing_x)
 		self.placeholder_points_grid = op('sopto_points_placeholder')
 
 	def Init_grid(self):
@@ -86,8 +86,8 @@ class Grid_generator:
 		"""Get the UV coordinate for each point on the grid"""
 
 		for row_index in range(1, self.grid_data.numRows):
-			uv_x = float(self.grid_data[row_index, 'cpx'].val) / self.c2p.width
-			uv_y = float(self.grid_data[row_index, 'cpy'].val) / self.c2p.height
+			uv_x = float(self.grid_data[row_index, 'cpx'].val) / parent.Calibrator.par.Cameraresolution1
+			uv_y = float(self.grid_data[row_index, 'cpy'].val) / parent.Calibrator.par.Cameraresolution2
 			
 			# Cells that do not have values are set to -1 (this creates holes)			
 			if uv_x == 0.0 and uv_y == 0.0:
