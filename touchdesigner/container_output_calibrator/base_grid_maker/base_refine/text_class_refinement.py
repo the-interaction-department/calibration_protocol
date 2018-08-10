@@ -1,7 +1,7 @@
 class Refinement:
 
 	def __init__(self):
-		self.original = op('sopto_original')
+		self.original = op('table_smoothed')
 		self.smoothed = op('table_smoothed')
 		self.rows = op('../grid_template').par.rows
 		self.cols = op('../grid_template').par.cols
@@ -9,7 +9,7 @@ class Refinement:
 		self.Reset()
 
 	def Reset(self):
-		self.smoothed.text = self.original.text
+		self.smoothed.text = op('sopto_original').text
 
 	def Smooth(self):
 		for row_index in range(1, self.smoothed.numRows):
