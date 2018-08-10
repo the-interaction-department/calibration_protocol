@@ -1,8 +1,11 @@
 class Raytracer:
 
 	def __init__(self):
-		self.projection_matrix = op.Scene.op('cam').projection(1024, 768)
-		self.camera_matrix = op.Scene.op('cam').worldTransform
+		width = parent.Calibrator.par.Cameraresolution1
+		height = parent.Calibrator.par.Cameraresolution2
+
+		self.projection_matrix = op.Scene.op('cam_default').projection(width, height)
+		self.camera_matrix = op.Scene.op('cam_default').worldTransform
 		self.pick_vals = op.Scene.op('constant_pick_vals')
 
 		# mapu mapv

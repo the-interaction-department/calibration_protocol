@@ -15,6 +15,8 @@ class Sequencer:
 			op.ProjectorOutputs.op('switch_projection_map').par.index = 1
 			self.Calculate_bounds()
 
+		op.Decoder.op('base_mask_outliers/moviefilein_bounding').par.reloadpulse.pulse()
+
 		# Switch to patterns
 		op.ProjectorOutputs.op('switch_projection_map').par.index = 0
 		op('lfo_start').par.resetpulse.pulse()
