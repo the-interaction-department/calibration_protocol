@@ -75,14 +75,47 @@ class Refinement:
 						l_u = float(self.original[l_index, 'uv(0)'].val)
 						r_u = float(self.original[r_index, 'uv(0)'].val)
 
-						# Are the u-coordinates of each neighbor valid?
 						if l_u > 0.0 and r_u > 0.0:
-							print('filling u-coordinate at row {}'.format(row_index))
+							# Both neighbors are valid - simply interpolate between the two
 							self.smoothed[row_index, 'uv(0)'] = (l_u + r_u) / 2.0
+
 						elif l_u > 0.0 and r_u < 0.0:
-							self.smoothed[row_index, 'uv(0)'] = l_u
+							# Move rightwards until a non-zero u-coordinate is encountered
+							next_index = r_index
+							next_u = float(self.original[next_index, 'uv(0)'].val)
+							count = 1
+
+							while next_u < 0.0:
+								next_index = next_index + 1
+								next_grid_col = next_index % self.cols
+
+								# Don't extend past the right col
+								if next_grid_col > self.cols:
+									break
+
+								next_u = float(self.original[next_index, 'uv(0)'].val)
+								count += 1
+
+							self.smoothed[row_index, 'uv(0)'] = self.lerp(l_u, next_u, 1.0 / count)
+
 						elif l_u < 0.0 and r_u > 0.0:
-							self.smoothed[row_index, 'uv(0)'] = r_u
+							# Move leftwards until a non-zero u-coordinate is encountered
+							next_index = r_index
+							next_u = float(self.original[next_index, 'uv(0)'].val)
+							count = 1
+
+							while next_u < 0.0:
+								next_index = next_index - 1
+								next_grid_col = next_index % self.cols
+
+								# Don't extend past the right col
+								if next_grid_col < 0:
+									break
+
+								next_u = float(self.original[next_index, 'uv(0)'].val)
+								count += 1
+
+							self.smoothed[row_index, 'uv(0)'] = self.lerp(r_u, next_u, 1.0 / count)
 
 					# Fill vertical
 					if curr_v < 0.0:
@@ -105,8 +138,10 @@ class Refinement:
 
 							while next_v < 0.0:
 								next_index = next_index - self.cols
+								next_grid_row = next_index // self.cols
 
-								if next_index < 0:
+								# Don't extend past the bottom row
+								if next_grid_row < 0:
 									break
 
 								next_v = float(self.original[next_index, 'uv(1)'].val)
@@ -122,8 +157,10 @@ class Refinement:
 
 							while next_v < 0.0:
 								next_index = next_index + self.cols
+								next_grid_row = next_index // self.cols
 
-								if next_index > self.original.numRows:
+								# Don't extend past the top row
+								if next_grid_row > self.rows:
 									break
 
 								next_v = float(self.original[next_index, 'uv(1)'].val)
