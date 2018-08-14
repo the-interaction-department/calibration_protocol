@@ -17,6 +17,7 @@ class Grid_generator:
 		self.num_rows = math.floor(parent.Calibrator.par.Projectorresolution2 / self.grid_spacing_y)
 		self.num_cols = math.floor(parent.Calibrator.par.Projectorresolution1 / self.grid_spacing_x)
 		self.placeholder_points_grid = op('sopto_points_placeholder')
+		self.minimum_centroid_size = 4
 
 	def Init_grid(self):
 		"""Initialize the grid with the correct number of rows and columns"""
@@ -64,8 +65,6 @@ class Grid_generator:
 	def Compute_averages(self):
 		"""Compute the average of every cell, which should give an approximation of the average"""
 
-		minimum_centroid_size = 4
-
 		# TODO: check to see if at least 4 camera pixels correspond 
 		# to this projector pixel, i.e. that the 'count' column is
 		# 4 or greater
@@ -96,6 +95,8 @@ class Grid_generator:
 				
 			self.destination_grid[row_index, 'uv(0)'] = uv_x
 			self.destination_grid[row_index, 'uv(1)'] = uv_y
+
+		op('base_refine').par.Reset.pulse()
 
 	def Execute_all(self):
 		"""Convenience method that calls all steps"""

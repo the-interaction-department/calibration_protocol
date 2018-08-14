@@ -27,7 +27,8 @@ void main()
     relative_index = int(floor((u_absolute_index + 2) / 2.0));
 
     // The total number of possible unique gray codes 
-    // for the given bit-depth
+    // for the given bit-depth (i.e. for a 4-bit sequence, 
+    // this would be 16)
     int possible_unique = int(pow(2.0, u_bits));
 
     // Divide the space into a number of tiles equal to the

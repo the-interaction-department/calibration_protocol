@@ -17,6 +17,7 @@ layout(location = 0) out vec4 o_color;
 // Parameters:
 // `number_of_bits`: the number of bits used in a particular orientation
 // `offset`: an integer slice offset into the texture 3D containing captures
+// `valid`: a boolean that will be set to `false` if the sequence is invalid
 uint decode(int number_of_bits, int offset, inout bool valid)
 {
 	uint gray = 0;
@@ -86,13 +87,13 @@ void main()
 
 	uint val_x = gray_to_binary(gray_value_x);
 	uint val_y = gray_to_binary(gray_value_y);
-
-	// Scale color from [0..1] then scale to native projector resolution
 	color = vec4(val_x, val_y, 0.0, 1.0);
 
+	// If either the horizontal or vertical sequence is invalid,
+	// output a "special" value
 	if (!valid_x || !valid_y)
 	{
-		color = vec4(-1.0, -1.0, -1.0, 1.0);
+		color = vec4(vec3(-1.0), 1.0);
 	}
 
 	o_color = color;

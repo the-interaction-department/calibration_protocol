@@ -12,6 +12,7 @@ class Refinement:
 		self.smoothed.text = op('sopto_original').text
 
 	def Smooth(self):
+		print('Smoothing...')
 		for row_index in range(1, self.smoothed.numRows):
 			grid_row = (row_index - 1) // self.cols
 			grid_col = (row_index - 1) % self.cols
@@ -50,7 +51,11 @@ class Refinement:
 								print('v-coordinate at row {} was invalid - deleting'.format(row_index))
 								self.smoothed[row_index, 'uv(1)'] = -1.0
 
+	def lerp(self, v0, v1, t):
+  		return v0 + t * (v1 - v0)
+
 	def Fill(self):
+		"""Attempts to fill holes in the grid mesh"""
 		for row_index in range(1, self.smoothed.numRows):
 			grid_row = (row_index - 1) // self.cols
 			grid_col = (row_index - 1) % self.cols
@@ -74,7 +79,12 @@ class Refinement:
 						if l_u > 0.0 and r_u > 0.0:
 							print('filling u-coordinate at row {}'.format(row_index))
 							self.smoothed[row_index, 'uv(0)'] = (l_u + r_u) / 2.0
+						elif l_u > 0.0 and r_u < 0.0:
+							self.smoothed[row_index, 'uv(0)'] = l_u
+						elif l_u < 0.0 and r_u > 0.0:
+							self.smoothed[row_index, 'uv(0)'] = r_u
 
+					# Fill vertical
 					if curr_v < 0.0:
 						t_index = row_index + self.cols
 						b_index = row_index - self.cols
@@ -83,12 +93,40 @@ class Refinement:
 						t_v = float(self.original[t_index, 'uv(1)'].val)
 						b_v = float(self.original[b_index, 'uv(1)'].val)
 
-						# Are the u-coordinates of each neighbor valid?
 						if t_v > 0.0 and b_v > 0.0:
-							print('filling v-coordinate at row {}'.format(row_index))
+							# Both neighbors are valid - simply interpolate between the two
 							self.smoothed[row_index, 'uv(1)'] = (t_v + b_v) / 2.0
+
 						elif t_v > 0.0 and b_v < 0.0:
-							print('dsadasd')
-							self.smoothed[row_index, 'uv(1)'] = t_v
+							# Move downwards until a non-zero v-coordinate is encountered
+							next_index = b_index
+							next_v = float(self.original[next_index, 'uv(1)'].val)
+							count = 1
+
+							while next_v < 0.0:
+								next_index = next_index - self.cols
+
+								if next_index < 0:
+									break
+
+								next_v = float(self.original[next_index, 'uv(1)'].val)
+								count += 1
+
+							self.smoothed[row_index, 'uv(1)'] = self.lerp(t_v, next_v, 1.0 / count)
+
 						elif t_v < 0.0 and b_v > 0.0:
-							self.smoothed[row_index, 'uv(1)'] = b_v
+							# Move upwards until a non-zero v-coordinate is encountered
+							next_index = t_index
+							next_v = float(self.original[next_index, 'uv(1)'].val)
+							count = 1
+
+							while next_v < 0.0:
+								next_index = next_index + self.cols
+
+								if next_index > self.original.numRows:
+									break
+
+								next_v = float(self.original[next_index, 'uv(1)'].val)
+								count += 1
+
+							self.smoothed[row_index, 'uv(1)'] = self.lerp(b_v, next_v, 1.0 / count)
