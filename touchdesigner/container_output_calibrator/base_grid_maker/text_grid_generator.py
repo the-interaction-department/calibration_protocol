@@ -39,10 +39,13 @@ class Grid_generator:
 	def Process_grid(self, verbose=False):
 		"""Loop through every pixel in the c2p and build the correspondence between projector and camera pixels"""
 
+		# Will be of dimensions: (h, w)
+		pixels = self.c2p.numpyArray()
+
 		for cpx in range(self.c2p.width):
 			for cpy in range(self.c2p.height):
 				# cpx and cpy are camera image pixel (from lower left) the projector pixels are encoded in the r and g channels
-				ppx, ppy, _, _ = self.c2p.sample(x=cpx, y=cpy)
+				ppx, ppy, _, _ = pixels[cpy, cpx] 
 
 				# Many camera pixels do not store projector pixels - skip these
 				if ppx < 0.0 or ppy < 0.0:

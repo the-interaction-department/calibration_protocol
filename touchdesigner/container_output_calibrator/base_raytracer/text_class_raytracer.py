@@ -22,10 +22,12 @@ class Raytracer:
 	def Trace(self):
 		self.p2m.clear()
 
+		pixels = self.p2c.numpyArray()
+
 		for ppx in range(self.p2c.width):
 			for ppy in range(self.p2c.height):
 				# Camera pixel coordinates are already normalized
-				cpx, cpy, _, _ = self.p2c.sample(x=ppx, y=ppy)
+				cpx, cpy, _, _ = pixels[ppy, ppx]
 
 				if not cpx and not cpy:
 					self.p2m.appendRow([ppx, ppy, -1.0, -1.0])
