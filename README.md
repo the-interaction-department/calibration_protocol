@@ -1,5 +1,5 @@
-# Output Calibration
-An implementation of _Multi-Projectors for Arbitrary Surfaces Without Explicit Calibration Nor Reconstruction_ by Tardif and Roy in TouchDesigner and Python.
+# calibration
+🏁 An implementation of _Multi-Projectors for Arbitrary Surfaces Without Explicit Calibration Nor Reconstruction_ by Tardif and Roy in TouchDesigner and Python.
 
 ## Description
 A tool to automatically projection map still images and/or video onto an arbitrary, physical surface using structured light.
