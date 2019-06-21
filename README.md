@@ -2,7 +2,7 @@
 🏁 An implementation of _Multi-Projectors for Arbitrary Surfaces Without Explicit Calibration Nor Reconstruction_ by Tardif and Roy in TouchDesigner and Python.
 
 <p align="center">
-  <img src="https://github.com/the-interaction-department/calibration_protocol/blob/master/screenshots/sequence.png" alt="screenshot" width="500" height="auto"/>
+  <img src="https://github.com/the-interaction-department/calibration_protocol/blob/master/screenshots/sequence.PNG" alt="screenshot" width="500" height="auto"/>
 </p>
 
 ## Description
