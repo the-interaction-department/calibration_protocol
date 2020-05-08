@@ -1,4 +1,4 @@
-# calibration
+# Calibration Protocol
 🏁 An implementation of _Multi-Projectors for Arbitrary Surfaces Without Explicit Calibration Nor Reconstruction_ by Tardif and Roy in TouchDesigner and Python.
 
 <p align="center">
